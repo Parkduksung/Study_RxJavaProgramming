@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_chapter6.*
 
 class Chapter6 : BaseActivity(R.layout.activity_chapter6) {
 
-    //RxAndroid 구성요소
+    // RxAndroid 구성요소
     // Observable : 비지니스 로직을 이용해 데이터를 발행.
     // 구독자 : Observable 에서 발행한 데이터를 구독합니다.
     // 스케줄러 : 스케줄러를 통해서 Observable, 구독자가 어느 스레드에서 실행될지 결정할 수 있습니다.
@@ -27,18 +27,28 @@ class Chapter6 : BaseActivity(R.layout.activity_chapter6) {
             .subscribe(::println)
 
 
+        //동작은 원하는 부분을 사전에 정의
+        val observable = Observable.just("hi")
+
         // et 에서 변화되면 이 변화를 감지해서 tv 의 text 로 값을 주는방식을 생각해서 짜봤음.
         et_text1.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 Observable.just(s).subscribe(tv_text1::setText)
+
+                s?.let {
+                    if (it.length >= 10) {
+                        //실행되는 시점
+                        observable.subscribe(tv_text2::setText)
+                    } else {
+                        tv_text2.text = ""
+                    }
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
             }
         })
     }
