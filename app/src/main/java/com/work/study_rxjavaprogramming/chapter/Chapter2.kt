@@ -6,6 +6,10 @@ import android.util.Log
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
 import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.Single
+import org.reactivestreams.Publisher
+import java.util.concurrent.Callable
 
 class Chapter2 : BaseActivity(R.layout.activity_chapter2) {
 
@@ -51,18 +55,119 @@ class Chapter2 : BaseActivity(R.layout.activity_chapter2) {
     // Observable 구독을 해지했는지 확인하는 함수.
     // 정상적으로 구독이 해지됬으면 true 그렇지 않으면 false
 
+    // 4) create()
+    // onNext , onComplete, onError 를 모두 개발자가 직접 호출.
+
     @SuppressLint("CheckResult")  // 이거 왜 되는거임??
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val observable: Observable<String> = Observable.just("RED", "GREEN", "YELLOW")
+//        val observable: Observable<String> = Observable.just("RED", "GREEN", "YELLOW")
+//
+//        observable.subscribe(
+//            { Log.d("결과", it) },
+//            { Log.d("결과", it.toString()) },
+//            { Log.d("결과", "onComplete") }
+//        )
 
-        observable.subscribe(
+//        val createObservable = Observable.create { emitter: ObservableEmitter<Int> ->
+//            emitter.apply {
+//                onNext(100)
+//                onNext(200)
+//                onNext(300)
+//                onComplete()
+//            }
+//        }
+
+//        createObservable.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+//
+//        createObservable.subscribe(io.reactivex.functions.Consumer { data ->
+//            Log.d("결과", data.toString())
+//        })
+
+//        val intArray = intArrayOf(100, 200, 300)
+//        val stringArray = listOf("Jerry", "William", "Bob")
+
+        // 이렇게 하면 쓰레기값이 나온다.
+//        val fromArrayObservable1 = Observable.fromArray(intArray)
+//        fromArrayObservable1.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+
+        // 이렇게 하면 나오네..!?
+//        val fromArrayObservable2 = Observable.fromArray(intArray.map { it.toInt() })
+//        fromArrayObservable2.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+
+        // 이렇게도 나옴.
+//        val fromIterableObservable1 = Observable.fromIterable(intArray.toList())
+//        fromIterableObservable1.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+
+        // fromIterable()
+        // 반복자 반환. 타입에 의존하지 않고 그 값을 얻어오는 것만 관여
+        // hasNext() , next() 메서드 존재.
+        // list set 등의 클래스 구현
+
+//        val fromIterableObservable2 = Observable.fromIterable(stringArray)
+//        fromIterableObservable2.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+
+        // fromCallable()
+        // 비동기 실행 후 결과를 반환하는 call() 메서드를 정의한다.
+        // 리턴한다는 점이 가장 중요!
+
+//        val callable: Callable<String> = Callable {
+//            Thread.sleep(2000)
+//            "hi callable"
+//        }
+//
+//        val callableObservable = Observable.fromCallable(callable)
+//        callableObservable.subscribe { data ->
+//            Log.d("결과", data)
+//        }
+
+        // fromPublisher()
+        // create() 와 마찬가지로 onNext() , onComplete() 함수를 호출할 수 있다.
+
+//        val publisher = Publisher<String> {
+//            it.onNext("Hello publisher")
+//            it.onComplete()
+//        }
+
+        // 오 근데 신기한게 2초뒤에 나오네 위에 2초 sleep 걸어놨다고 ㅎㅎ
+//        val publisherObservable = Observable.fromPublisher(publisher)
+//        publisherObservable.subscribe { data ->
+//            Log.d("결과", data)
+//        }
+
+        // single 클래스
+        // Observable 클래스는 데이터 무제한 발행이지만 single 은 1개만 발행!
+        // 결과가 유일한 api 호출할때 유용하게 사용
+        // 데이터 하나 발행과 동시에 종료 된다는점 (onSuccess) => onNext() + onComplete() 가 함수가 통합된 onSuccess()
+        // single 클래스의 lifecycle function 은 2개 => onSuccess() , onError()
+
+        //Single.just("Hello Single", "asdf") 이게 안됨 1개밖에 발행이 안되니!
+        val single1 = Single.just("Hello Single")
+        single1.subscribe { data ->
+            Log.d("결과", data)
+        }
+
+        // Observable 이 발행한 게 1개일때는 걍 1개만 ㄱㄱ
+        val observable1 = Observable.just("convert single")
+        Single.fromObservable(observable1).subscribe { data ->
+            Log.d("결과", data)
+        }
+        // Observable 이 발행한 게 1개 이상일때 에러가 발생 하구만 역시...
+        val observable2 = Observable.just("convert single1", "convert single1")
+        Single.fromObservable(observable2).subscribe(
             { Log.d("결과", it) },
-            { Log.d("결과", it.toString()) },
-            { Log.d("결과", "onComplete") },
-            { Log.d("결과", "dispose o") }
+            { Log.d("결과", it.toString()) }
         )
-
     }
 }
