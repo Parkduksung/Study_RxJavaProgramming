@@ -2,14 +2,11 @@ package com.work.study_rxjavaprogramming.chapter
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.Single
-import org.reactivestreams.Publisher
-import java.util.concurrent.Callable
+import io.reactivex.subjects.PublishSubject
+
 
 class Chapter2 : BaseActivity(R.layout.activity_chapter2) {
 
@@ -153,21 +150,220 @@ class Chapter2 : BaseActivity(R.layout.activity_chapter2) {
         // single 클래스의 lifecycle function 은 2개 => onSuccess() , onError()
 
         //Single.just("Hello Single", "asdf") 이게 안됨 1개밖에 발행이 안되니!
-        val single1 = Single.just("Hello Single")
-        single1.subscribe { data ->
-            Log.d("결과", data)
+//        val single1 = Single.just("Hello Single")
+//        single1.subscribe { data ->
+//            Log.d("결과", data)
+//        }
+//
+//        // Observable 이 발행한 게 1개일때는 걍 1개만 ㄱㄱ
+//        val observable1 = Observable.just("convert single")
+//        Single.fromObservable(observable1).subscribe { data ->
+//            Log.d("결과", data)
+//        }
+//        // Observable 이 발행한 게 1개 이상일때 에러가 발생 하구만 역시...
+//        val observable2 = Observable.just("convert single1", "convert single1")
+//        Single.fromObservable(observable2).subscribe(
+//            { Log.d("결과", it) },
+//            { Log.d("결과", it.toString()) }
+//        )
+
+        // 차가운? => 냉소적인 느낌이 들었고 => 이를 프로그래밍으로 생각해봣을때 => 다가가기 힘든? => 먼가 노력이 필요? 내가 다가가야하는? => 그래야 마음을 열어주는?
+        // 위에 blah blah 적었는데 요청을 하면 그에 맞는 결과를 내는 거라고 생각하면 될 것이다.
+        // 차갑다? => 냉동? => 먼가 녹이는 작업이 필요?
+        // subscribe() 호출하여 구독안하면 데이터 발행 x
+        // 가만보면 차가운 Observable 은 누군가 요청하는 사람 (구독자) 필요하네.
+
+        // 뜨거운? => 먼가 열정많은?ㅋ => 먼가 일이 많아? => 하는일이 많아? => 계속적인 요청?? => 이거는 감이 잘 안옴.
+
+        // Subject
+        // 차가운 -> 뜨거운 Observable
+        // AsyncSubject , BehaviorSubject , PublishSubject , ReplaySubject 등이 있음.
+
+        // AsyncSubject
+        // 완료되기전 마지막 데이터에만 관심. 이전 데이터 무시. 그리고 앞으로의 데이터도 무시? => onComplete() 호출 후 이후 onNext() 무시.
+
+//        val asyncSubject = AsyncSubject.create<String>()
+//        asyncSubject.subscribe { data ->
+//            Log.d("결과", data)
+//        }
+//        asyncSubject.onNext("1")
+//        asyncSubject.onNext("2")
+//        asyncSubject.subscribe { data ->
+//            Log.d("결과", data)
+//        }
+//        asyncSubject.onNext("6")  // 이게 나올꺼임.
+//        asyncSubject.onComplete()
+//        asyncSubject.onNext("8")
+//        asyncSubject.onNext("10")
+//        asyncSubject.subscribe { data ->
+//            Log.d("결과", data)
+//        }
+
+        // AsyncSubject => Observable 동작
+//        val arrayString = arrayOf("a", "b", "c")
+//        val observable1 = Observable.fromArray(*arrayString)
+//
+//        val asyncSubject1 = AsyncSubject.create<String>()
+//        asyncSubject1.subscribe { data ->
+//            Log.d("결과", data)
+//        }
+//
+//        observable1.subscribe(asyncSubject1)
+
+//        val temperature = arrayOf(10.1f, 13.4f, 12.5f)
+//        val source =
+//            Observable.fromArray(*temperature)
+//
+//        val subject = AsyncSubject.create<Float>()
+//        subject.subscribe { data: Float ->
+//            println(
+//                "Subscriber #1 =>$data"
+//            )
+//        }
+//        source.subscribe(subject)
+
+        // BehaviorSubject 클래스
+        // 구독하면 가장 최근 값 혹은 기본값을 넘겨주는 클래스.
+
+        // 구독자 2명이 있는데 1번은 초기값이 없어서 6이 찍힌거고 2에게 3은 초기값이므로 3을 구독하게 된다.
+        // 그리고 나서 최근 값들을 각자 구독받게 된다.
+//        val behaviorSubject = BehaviorSubject.createDefault("6")
+//        behaviorSubject.apply {
+//            subscribe { data ->
+//                Log.d("Subscriber #1 =>", data)
+//            }
+//            onNext("1")
+//            onNext("3")
+//            subscribe { data ->
+//                Log.d("Subscriber #2 =>", data)
+//            }
+//            onNext("5")
+//            onComplete()
+//        }
+
+        // PublishSubject
+        // 오직 해당 시간에 발행한 데이터를 그대로 구독자에게 전달.
+        // 가장 평범한 subject 클래스
+
+//        val publishSubject = PublishSubject.create<String>()
+//
+//        publishSubject.apply {
+//            subscribe { data ->
+//                Log.d("Subscriber #1 =>", data)
+//            }
+//            onNext("1")
+//            onNext("3")
+//            subscribe { data ->
+//                Log.d("Subscriber #2 =>", data)
+//            }
+//            onNext("5")
+//            onComplete()
+//        }
+
+        // ReplaySubject 클래스
+        // 구독자가 새로 생기면 항상 데이터의 처음부터 끝까지 발행하는것을 보장. => 테이프로 전체 내용 녹음해두었다가 새로운 사람이 들어오면 정해진 음악을 틀어주는것과 같다.
+        // 모든 데이터 내용을 저장하므로 메모리 누수 염두 해야함.
+
+//        val replaySubject = ReplaySubject.create<String>()
+//
+//        replaySubject.apply {
+//            subscribe { data ->
+//                Log.d("Subscriber #1 =>", data)
+//            }
+//            onNext("1")
+//            onNext("3")
+//            subscribe { data ->
+//                Log.d("Subscriber #2 =>", data)
+//            }
+//            onNext("5")
+//            onComplete()
+//        }
+
+        // ConnectableObservable 클래스
+        // 이것도 차가운 -> 뜨꺼운
+        // 특이한점은 subscribe() 를 호출해도 아무 동작 x => connect() 를 호출한 시점부터가 subscribe() 호출한 구독자에게 데이터를 발행한다.
+        // 생성하려면 Observable 에 publish() 호출해야함.
+
+//        val dt = arrayOf("RED", "GREEN", "BLUE")
+//        val balls: Observable<String> =
+//            Observable.interval(1000L, TimeUnit.MILLISECONDS)
+//                .map { obj: Long -> obj.toInt() }
+//                .map { i ->
+//                    dt[i]
+//                }
+//                .take(dt.size.toLong())
+//        val source = balls.publish()
+//        source.subscribe { data: String ->
+//            println(
+//                "Subscriber #1 => $data"
+//            )
+//        }
+//        source.subscribe { data: String ->
+//            println(
+//                "Subscriber #2 => $data"
+//            )
+//        }
+//        source.connect()
+//
+//        Thread.sleep(2000)
+//        source.subscribe { data: String ->
+//            println(
+//                "Subscriber #3 => $data"
+//            )
+//        }
+//        Thread.sleep(100)
+
+
+        val oPublishSubject = PublishSubject.create<String>()
+
+
+        val observable = Observable.just("1", "3", "5")
+
+        val source = observable.publish()
+
+        source.apply {
+            subscribe { data ->
+                println("Subscribe #1 ->$data")
+            }
+            // 여기서 하면 1번만 구독 가능
+            //Subscribe #1 ->1
+            //Subscribe #1 ->3
+            //Subscribe #1 ->5
+            //connect()
+
+            subscribe { data ->
+                println("Subscribe #2 ->$data")
+            }
+
+            // 여기서 하면 1,2번 구독 가능.
+            //connect()
+            //Subscribe #1 ->1
+            //Subscribe #2 ->1
+            //Subscribe #1 ->3
+            //Subscribe #2 ->3
+            //Subscribe #1 ->5
+            //Subscribe #2 ->5
+
+            // connect() 둘다하면은
+            //Subscribe #1 ->1
+            //Subscribe #1 ->3
+            //Subscribe #1 ->5
+            //Subscribe #2 ->1
+            //Subscribe #2 ->3
+            //Subscribe #2 ->5
+
         }
 
-        // Observable 이 발행한 게 1개일때는 걍 1개만 ㄱㄱ
-        val observable1 = Observable.just("convert single")
-        Single.fromObservable(observable1).subscribe { data ->
-            Log.d("결과", data)
-        }
-        // Observable 이 발행한 게 1개 이상일때 에러가 발생 하구만 역시...
-        val observable2 = Observable.just("convert single1", "convert single1")
-        Single.fromObservable(observable2).subscribe(
-            { Log.d("결과", it) },
-            { Log.d("결과", it.toString()) }
-        )
+
+//        val pc_Observable =
+//            oPublishSubject.publish()
+//        oPublishSubject.onNext("1") pc_Observable . subscribe { data ->
+//            println("Subscribe #1 ->$data")
+//        } pc_Observable . subscribe { data -> println("Subscribe #2 ->$data") } pc_Observable . connect () oPublishSubject . onNext ("2") oPublishSubject . onNext ("3") pc_Observable . subscribe { data ->
+//            println(
+//                "Subscribe #3 ->$data"
+//            )
+//        } oPublishSubject . onNext ("4") oPublishSubject . onComplete ()
+
     }
 }
