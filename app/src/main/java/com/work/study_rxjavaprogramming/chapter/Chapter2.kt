@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 
 
 class Chapter2 : BaseActivity(R.layout.activity_chapter2) {
@@ -312,9 +311,6 @@ class Chapter2 : BaseActivity(R.layout.activity_chapter2) {
 //            )
 //        }
 //        Thread.sleep(100)
-
-
-        val oPublishSubject = PublishSubject.create<String>()
 
 
         val observable = Observable.just("1", "3", "5")
