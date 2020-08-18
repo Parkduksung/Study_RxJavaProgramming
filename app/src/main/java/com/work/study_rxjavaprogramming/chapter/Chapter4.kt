@@ -5,6 +5,7 @@ import android.os.Bundle
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
 
+
 class Chapter4 : BaseActivity(R.layout.activity_chapter4) {
 
     @SuppressLint("CheckResult")
@@ -75,6 +76,101 @@ class Chapter4 : BaseActivity(R.layout.activity_chapter4) {
 //            { Log.d("결과", it) }, {},
 //            { Log.d("결과", "complete") }
 //        )
+
+        // 변환 연산자
+        // 데이터 흐름을 원하는 대로 변형할 수 있는 변환 연산자~
+        // 기본이 되는 함수와 비교하여 어떻게 다른지 그 차이점을 기억하는것이 좋다.
+
+        // concatMap()
+        // flatMap() 과 유사.
+        // flatMap 은 먼저 들어온 데이터 처리도중 새로운 데이터가 들어오면 나중에 들어온 데이터의 처리 결과가 먼저 처리될수 있는 인터리빙이 발생가능할 수 있다.
+        // concatMap 은 인터리빙이 발생하지 않고 먼저 들어온 데이터 순서대로 처리해서 결과를 낼 수 있도록 보장.
+//        val balls = arrayOf("1", "3", "5")
+//        CommonUtils.exampleStart()
+
+//        Observable.interval(100L, TimeUnit.MILLISECONDS).map(Long::toInt).map { idx -> balls[idx] }
+//            .take(balls.size.toLong()).concatMap { ball ->
+//                Observable.interval(200L, TimeUnit.MILLISECONDS).map { notUsed -> "$ball<>" }
+//                    .take(2)
+//            }.subscribe { data -> Log.d("결과", data) }
+//
+//        CommonUtils.sleep(2000)
+
+        //결과 113355
+
+//        CommonUtils.exampleStart()
+//
+//        Observable.interval(100L, TimeUnit.MILLISECONDS).map(Long::toInt).map { idx -> balls[idx] }
+//            .take(balls.size.toLong()).flatMap { ball ->
+//                Observable.interval(200L, TimeUnit.MILLISECONDS).map { notUsed -> "$ball<>" }
+//                    .take(2)
+//            }.subscribe { data -> Log.d("결과", data) }
+//
+//        CommonUtils.sleep(2000)
+
+        //결과 135135
+
+        // switchMap()
+        // concatMap() 함수가 인터리빙이 발생할 수 있는 상황에서 동작의 순서를 보장한다면
+        // switchMap() 함수는 순서를 보장하기 위해 기존에 진행 중이던 작업을 바로 중단함.
+        // 그리고 여러개 값 발행될때 마지막 들어온 값만 처리하고 싶을때 사용.
+        // 느낌이 중간엔 끊기더라도 마지막 데이터 처리는 보장한다는 의미.
+
+//        CommonUtils.exampleStart()
+//
+//        Observable.interval(100L, TimeUnit.MILLISECONDS).map(Long::toInt).map { idx -> balls[idx] }
+//            .take(balls.size.toLong()).doOnNext { Log.d("중간결과", it) }.switchMap { ball ->
+//                Observable.interval(200L, TimeUnit.MILLISECONDS).map { notUsed -> "$ball<>" }
+//                    .take(2)
+//            }.subscribe { data -> Log.d("결과", data) }
+//
+//        CommonUtils.sleep(2000)
+
+        // groupBy()
+        // 어떤 기준으로 단일 Observable 을 여러 개로 이루어진 Observable 그룹으로 만드는 것 .
+
+//        val objs = arrayOf<String>(
+//            PUPPLE,
+//            SKY,
+//            triangle(YELLOW),
+//            YELLOW,
+//            triangle(PUPPLE),
+//            triangle(SKY)
+//        )
+//        val source =
+//            Observable.fromArray(*objs)
+//                .groupBy(Shape::getShape)
+//
+//        source.subscribe { obj: GroupedObservable<String, String> ->
+//            obj.subscribe { `val`: String ->
+//                println(
+//                    "GROUP:" + obj.key + "\t Value:" + `val`
+//                )
+//            }
+//        }
+
+        //filter 적용시.
+//        val source: Observable<GroupedObservable<String, String>> =
+//            Observable.fromArray(*objs)
+//                .groupBy(Shape::getShape)
+//
+//        source.subscribe { obj: GroupedObservable<String, String> ->
+//            obj.filter { `val`: String? -> obj.key == Shape.BALL }
+//                .subscribe { `val`: String ->
+//                    println(
+//                        "GROUP:" + obj.key + "\t Value:" + `val`
+//                    )
+//                }
+//        }
+
+        // scan()
+        // reduce() 와 비슷. 근데 reduce 는 모든 데이터 입력 후 그것들 종합하여 마지막 1개만 구독한다면
+        // scan() 은 reduce + 중간결과라 생각하면 된다.
+
+//        Observable.fromArray("1", "3", "5").scan { t1: String, t2: String -> "$t2($t1)" }
+//            .subscribe { data -> Log.d("결과", data) }
+
+
 
     }
 }
