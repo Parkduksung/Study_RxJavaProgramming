@@ -1,9 +1,16 @@
 package com.work.study_rxjavaprogramming.chapter
 
 import android.annotation.SuppressLint
+import android.icu.util.TimeUnit
 import android.os.Bundle
+import android.util.Log
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
+import com.work.study_rxjavaprogramming.util.CommonUtils
+import com.work.study_rxjavaprogramming.util.CommonUtils.exampleComplete
+import com.work.study_rxjavaprogramming.util.CommonUtils.sleep
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 
 
 class Chapter4 : BaseActivity(R.layout.activity_chapter4) {
@@ -170,6 +177,109 @@ class Chapter4 : BaseActivity(R.layout.activity_chapter4) {
 //        Observable.fromArray("1", "3", "5").scan { t1: String, t2: String -> "$t2($t1)" }
 //            .subscribe { data -> Log.d("결과", data) }
 
+
+        // 결합연산자
+        // 다수의 Observable 을 하나로 합하는 방법을 제공.
+//        val shapes = arrayOf(BALL, PENTAGON, STAR)
+//        val coloredTriangles =
+//            arrayOf(triangle(YELLOW), triangle(PUPPLE), triangle(SKY))
+//
+//        val source =
+//            Observable.zip(
+//                Observable.fromArray(*shapes)
+//                    .map<String>(Shape::getSuffix),
+//                Observable.fromArray(*coloredTriangles)
+//                    .map<String>(Shape::getColor),
+//                BiFunction<String, String, String> { suffix: String, color: String -> color + suffix }
+//            )
+//
+//        source.subscribe { data ->
+//            Log.d("결과", data)
+//        }
+
+//
+//        val source = Observable.zip(
+//            Observable.just(100, 200, 300),
+//            Observable.just(10, 20, 30),
+//            Observable.just(1, 2, 3),
+//            Function3 { a: Int, b: Int, c: Int -> a + b + c }
+//        )
+//
+//        source.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+//        val source =
+//            Observable.zip(
+//                Observable.just(100, 200, 300),
+//                Observable.just(10, 20, 30),
+//                BiFunction<Int, Int, Int> { a: Int, b: Int -> a + b }
+//            )
+//                .zipWith(
+//                    Observable.just(1, 2, 3),
+//                    BiFunction<Int, Int, Int> { ab: Int, c: Int -> ab + c }
+//                )
+//        source.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+
+        // combineLatest()
+        // zip 의 zipper 랑 동일한 역할.
+        // 2개 이상의 Observable 을 기반으로 Observable 각각의 값이 변경되었을 때 갱신해주는 함수.
+//
+//        val data1 =
+//            arrayOf<String>(PUPPLE, ORANGE, SKY, YELLOW) //6, 7, 4, 2
+//
+//        val data2 = arrayOf<String>(DIAMOND, STAR, PENTAGON)
+//
+//        val source =
+//            Observable.combineLatest(
+//                Observable.fromArray(*data1)
+//                    .zipWith( //zipWith()로 깔끔하게 코드 정리
+//                        Observable.interval(100L, java.util.concurrent.TimeUnit.MILLISECONDS),
+//                        BiFunction { shape: String, notUsed: Long ->
+//                            Shape.getColor(
+//                                shape
+//                            )
+//                        }
+//                    ),
+//                Observable.fromArray(*data2)
+//                    .zipWith(
+//                        Observable.interval(150L, 200L, java.util.concurrent.TimeUnit.MILLISECONDS),
+//                        BiFunction { shape: String, notUsed: Long ->
+//                            Shape.getSuffix(
+//                                shape
+//                            )
+//                        }
+//                    ),
+//                BiFunction<String, String, String> { v1: String, v2: String -> v1 + v2 }
+//            )
+//        source.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+//
+//        sleep(1000)
+//        exampleComplete()
+
+        val source1 =
+            Observable.interval(100L, java.util.concurrent.TimeUnit.MILLISECONDS)
+                .map<String> { obj: Long -> CommonUtils.numberToAlphabet(obj) }
+        val source2 =
+            Observable.interval(200L, java.util.concurrent.TimeUnit.MILLISECONDS)
+        val combiner =
+            BiFunction { val1: String, val2: Long -> val1 + val2 }
+
+        val source =
+            Observable.combineLatest(
+                source1,
+                source2,
+                combiner
+            )
+        source.subscribe { data ->
+            Log.d("결과", data.toString())
+        }
+
+        sleep(500)
+        exampleComplete()
 
 
     }
