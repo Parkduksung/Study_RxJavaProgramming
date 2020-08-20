@@ -1,16 +1,18 @@
 package com.work.study_rxjavaprogramming.chapter
 
 import android.annotation.SuppressLint
-import android.icu.util.TimeUnit
 import android.os.Bundle
 import android.util.Log
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
-import com.work.study_rxjavaprogramming.util.CommonUtils
-import com.work.study_rxjavaprogramming.util.CommonUtils.exampleComplete
-import com.work.study_rxjavaprogramming.util.CommonUtils.sleep
+import com.work.study_rxjavaprogramming.util.Shape
+import com.work.study_rxjavaprogramming.util.Shape.GREEN
+import com.work.study_rxjavaprogramming.util.Shape.RED
+import com.work.study_rxjavaprogramming.util.Shape.SKY
+import com.work.study_rxjavaprogramming.util.Shape.YELLOW
+import com.work.study_rxjavaprogramming.util.Shape.rectangle
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
+import io.reactivex.Single
 
 
 class Chapter4 : BaseActivity(R.layout.activity_chapter4) {
@@ -260,26 +262,171 @@ class Chapter4 : BaseActivity(R.layout.activity_chapter4) {
 //        sleep(1000)
 //        exampleComplete()
 
-        val source1 =
-            Observable.interval(100L, java.util.concurrent.TimeUnit.MILLISECONDS)
-                .map<String> { obj: Long -> CommonUtils.numberToAlphabet(obj) }
-        val source2 =
-            Observable.interval(200L, java.util.concurrent.TimeUnit.MILLISECONDS)
-        val combiner =
-            BiFunction { val1: String, val2: Long -> val1 + val2 }
+//        val source1 =
+//            Observable.interval(100L, java.util.concurrent.TimeUnit.MILLISECONDS)
+//                .map<String> { obj: Long -> CommonUtils.numberToAlphabet(obj) }
+//        val source2 =
+//            Observable.interval(200L, java.util.concurrent.TimeUnit.MILLISECONDS)
+//        val combiner =
+//            BiFunction { val1: String, val2: Long -> val1 + val2 }
+//
+//        val source =
+//            Observable.combineLatest(
+//                source1,
+//                source2,
+//                combiner
+//            )
+//        source.subscribe { data ->
+//            Log.d("결과", data.toString())
+//        }
+//
+//        sleep(500)
+//        exampleComplete()
 
-        val source =
-            Observable.combineLatest(
-                source1,
-                source2,
-                combiner
-            )
-        source.subscribe { data ->
-            Log.d("결과", data.toString())
-        }
+        // merge()
+        // 입력 Observable 의 순서와 모든 Observable 이 데이터를 발행하는지 등에 관여하지 않고 어느 것이든 업스트림에서
+        // 먼저 입력되는 데이터를 그대로 발행한다.
+//
+//        val array1 = arrayOf("1", "3")
+//        val array2 = arrayOf("2", "4", "6")
+//
+//        val source1 = Observable.interval(0L, 100L, java.util.concurrent.TimeUnit.MILLISECONDS)
+//            .map(Long::toInt).map { idx -> array1[idx] }.take(array1.size.toLong())
+//        val source2 = Observable.interval(50L, java.util.concurrent.TimeUnit.MILLISECONDS)
+//            .map(Long::toInt).map { idx -> array2[idx] }.take(array2.size.toLong())
+//
+//
+//        Observable.merge(source1, source2).subscribe { data -> Log.d("결과", data) }
+//        CommonUtils.sleep(1000)
 
-        sleep(500)
-        exampleComplete()
+        //각자 다른 스페드에서 발행하는걸 잊지말자!
+
+        // concat()
+        // 2개 이상의 Observable 을 이어주는 함수
+        // 첫번째가 onComplete 되면 그다음 구독
+
+//        val action = Action {
+//            Log.d("결과", "끝")
+//        }
+//
+//        val array1 = arrayOf("1", "3", "5")
+//        val array2 = arrayOf("2", "4", "6")
+//
+//        val source1 = Observable.fromArray(*array1).doOnComplete(action)
+//        val source2 = Observable.interval(50L, java.util.concurrent.TimeUnit.MILLISECONDS)
+//            .map(Long::toInt).map { idx -> array2[idx] }.take(array2.size.toLong())
+//            .doOnComplete(action)
+//
+//
+//        Observable.concat(source1, source2).doOnComplete(action).subscribe {
+//            Log.d(
+//                "결과",
+//                it as String
+//            )
+//        }
+//        CommonUtils.sleep(1000)
+
+
+        // 조건연산자
+        // Observable 의 흐름을 제어하는 역할을 한다.
+
+        // amb()
+        // ambiguous(모호한) 이라는 영어 단어의 줄임말
+        // 가장 먼저 Observable 을 발행한것만 데이터 발생하고 나머지 모두 무시 .
+
+        // 가장 먼저 데이터를 발행한 거의 다음이 3,5 라고 한다면 이 사이에 2, 4 라는게 있다 하더라도 무시.
+        // 1   3    5
+        //  2 4  6
+        // 발행은 1, 3, 5 만.
+
+
+//        val data1 = arrayOf(RED, GREEN, BLUE)
+//        val data2 = arrayOf(rectangle(YELLOW), rectangle(SKY))
+//
+//        val sources =
+//            listOf(
+//                Observable.fromArray(*data1)
+//                    .doOnComplete { Log.d("결과", "Observable #1 : onComplete()") },
+//                Observable.fromArray(*data2)
+//                    .delay(100L, java.util.concurrent.TimeUnit.MILLISECONDS)
+//                    .doOnComplete { Log.d("결과", "Observable #2 : onComplete()") }
+//            )
+//
+//        Observable.amb(sources)
+//            .doOnComplete { Log.d("결과", "Result : onComplete()") }
+//            .subscribe {
+//                Log.d("결과", it)
+//            }
+//        sleep(1000)
+//        exampleComplete()
+
+        // takeUntil()
+        // take 함수에 조건을 설정하는 것.
+//
+//        val data =
+//            arrayOf(RED, YELLOW, GREEN, SKY, BLUE, PUPPLE)
+//
+//        val source: Observable<String> =
+//            Observable.fromArray(*data)
+//                .zipWith(
+//                    Observable.interval(
+//                        100L,
+//                        java.util.concurrent.TimeUnit.MILLISECONDS
+//                    ),
+//                    BiFunction<String, Long, String> { `val`: String, _ -> `val` }
+//                )
+//                .takeUntil(
+//                    Observable.timer(
+//                        500L,
+//                        java.util.concurrent.TimeUnit.MILLISECONDS
+//                    )
+//                )
+//
+//        source.subscribe {
+//            Log.d("결과", it)
+//        }
+//        sleep(1000)
+//        exampleComplete()
+
+        // skipUntil()
+//        val data =
+//            arrayOf(RED, YELLOW, GREEN, SKY, BLUE, PUPPLE)
+//
+//        val source: Observable<String> =
+//            Observable.fromArray(*data)
+//                .zipWith(
+//                    Observable.interval(
+//                        100L,
+//                        java.util.concurrent.TimeUnit.MILLISECONDS
+//                    ),
+//                    BiFunction<String, Long, String> { `val`: String, _ -> `val` }
+//                )
+//                .skipUntil(
+//                    Observable.timer(
+//                        500L,
+//                        java.util.concurrent.TimeUnit.MILLISECONDS
+//                    )
+//                )
+//
+//        source.subscribe {
+//            Log.d("결과", it)
+//        }
+//        sleep(1000)
+//        exampleComplete()
+//
+
+        // all()
+        // 조건 맞으면 true 아니면 false 리턴
+
+//        val data =
+//            arrayOf("1", "2", "3", "4")
+//
+//        val source: Single<Boolean> = Observable.fromArray(*data)
+//            .map<String>(Shape::getShape)
+//            .all(Shape.BALL::equals)
+//
+//        source.subscribe({ Log.d("결과", it.toString()) }, {})
+        //.all(val -> Shape.BALL.equals(Shape.getShape(val)));
 
 
     }
