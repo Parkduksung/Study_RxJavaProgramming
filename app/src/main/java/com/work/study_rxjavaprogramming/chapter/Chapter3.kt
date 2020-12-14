@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
+import com.work.study_rxjavaprogramming.databinding.ActivityChapter3Binding
 import io.reactivex.Observable
 import io.reactivex.functions.Function
 
-class Chapter3 : BaseActivity(R.layout.activity_chapter3) {
+class Chapter3 : BaseActivity<ActivityChapter3Binding>(R.layout.activity_chapter3) {
 
     // Observable 에서 발행한 데이터를 가공, 변환, 조합하는 다양한 연산자 함수에 대한 꼼지락.
 

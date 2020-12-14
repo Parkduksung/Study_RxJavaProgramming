@@ -2,20 +2,12 @@ package com.work.study_rxjavaprogramming.chapter
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
-import com.work.study_rxjavaprogramming.util.Shape
-import com.work.study_rxjavaprogramming.util.Shape.GREEN
-import com.work.study_rxjavaprogramming.util.Shape.RED
-import com.work.study_rxjavaprogramming.util.Shape.SKY
-import com.work.study_rxjavaprogramming.util.Shape.YELLOW
-import com.work.study_rxjavaprogramming.util.Shape.rectangle
-import io.reactivex.Observable
-import io.reactivex.Single
+import com.work.study_rxjavaprogramming.databinding.ActivityChapter4Binding
 
 
-class Chapter4 : BaseActivity(R.layout.activity_chapter4) {
+class Chapter4 : BaseActivity<ActivityChapter4Binding>(R.layout.activity_chapter4) {
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {

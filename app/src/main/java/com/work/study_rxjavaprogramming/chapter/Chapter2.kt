@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
+import com.work.study_rxjavaprogramming.databinding.ActivityChapter2Binding
 import io.reactivex.Observable
 
 
-class Chapter2 : BaseActivity(R.layout.activity_chapter2) {
+class Chapter2 : BaseActivity<ActivityChapter2Binding>(R.layout.activity_chapter2) {
 
     //Observable 에 대한 챕터
 

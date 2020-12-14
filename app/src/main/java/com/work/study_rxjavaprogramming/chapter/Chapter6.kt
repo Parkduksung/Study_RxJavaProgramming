@@ -6,11 +6,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import com.work.study_rxjavaprogramming.BaseActivity
 import com.work.study_rxjavaprogramming.R
+import com.work.study_rxjavaprogramming.databinding.ActivityChapter6Binding
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_chapter6.*
 
 
-class Chapter6 : BaseActivity(R.layout.activity_chapter6) {
+class Chapter6 : BaseActivity<ActivityChapter6Binding>(R.layout.activity_chapter6) {
 
     // RxAndroid 구성요소
     // Observable : 비지니스 로직을 이용해 데이터를 발행.
