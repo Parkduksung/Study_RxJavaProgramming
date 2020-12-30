@@ -25,13 +25,35 @@ class StudyCoroutine : BaseActivity<ActivityCoroutineBinding>(R.layout.activity_
     }
 
     private val jobTwo = GlobalScope.async {
-        var sum = 0
-        for( i in 0..10){
-            sum+=i
-            delay(500)
+            var sum = 0
+            for (i in 0..10) {
+                sum += i
+                delay(500)
+            }
+            Log.d("결과", sum.toString())
+            sum
+    }
+
+    //순서 = c - a - b - d
+    private fun jobThree() {
+        runBlocking { // this: CoroutineScope
+            launch {
+                delay(200L)
+                println("a")
+            }
+
+            coroutineScope { // Creates a coroutine scope
+                launch {
+                    delay(500L)
+                    println("b")
+                }
+
+                delay(100L)
+                println("c") // This line will be printed before the nested launch
+            }
+
+            println("d") // This line is not printed until the nested launch completes
         }
-        Log.d("결과", sum.toString())
-        sum
     }
 
     private val myCoroutineContext: CoroutineContext
@@ -43,6 +65,7 @@ class StudyCoroutine : BaseActivity<ActivityCoroutineBinding>(R.layout.activity_
 
         GlobalScope.launch(myCoroutineContext) {
 
+            jobThree()
 
             val editTextFlow =
                 binding.etText.textChangeToFlow()
