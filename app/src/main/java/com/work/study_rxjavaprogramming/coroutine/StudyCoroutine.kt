@@ -11,16 +11,23 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlin.coroutines.CoroutineContext
 
 class StudyCoroutine : BaseActivity<ActivityCoroutineBinding>(R.layout.activity_coroutine) {
+
+    private val myCoroutineJob = Job()
+
+    private val myCoroutineContext: CoroutineContext
+        get() = Dispatchers.IO + myCoroutineJob
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(myCoroutineContext) {
 
-            val editTextFlow = binding.etText.textChangeToFlow()
+            val editTextFlow =
+                binding.etText.textChangeToFlow()
 
             editTextFlow
                 .debounce(1500)
@@ -33,5 +40,10 @@ class StudyCoroutine : BaseActivity<ActivityCoroutineBinding>(R.layout.activity_
                 .launchIn(this)
         }
 
+    }
+
+    override fun onDestroy() {
+        myCoroutineContext.cancel()
+        super.onDestroy()
     }
 }
