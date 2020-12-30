@@ -17,14 +17,32 @@ class StudyCoroutine : BaseActivity<ActivityCoroutineBinding>(R.layout.activity_
 
     private val myCoroutineJob = Job()
 
+    private val jobOne = GlobalScope.launch {
+        for(i in 0..10){
+            Log.d("결과", i.toString())
+            delay(1000)
+        }
+    }
+
+    private val jobTwo = GlobalScope.async {
+        var sum = 0
+        for( i in 0..10){
+            sum+=i
+            delay(500)
+        }
+        Log.d("결과", sum.toString())
+        sum
+    }
+
     private val myCoroutineContext: CoroutineContext
-        get() = Dispatchers.IO + myCoroutineJob
+        get() = Dispatchers.IO + myCoroutineJob + jobOne + jobTwo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
         GlobalScope.launch(myCoroutineContext) {
+
 
             val editTextFlow =
                 binding.etText.textChangeToFlow()
