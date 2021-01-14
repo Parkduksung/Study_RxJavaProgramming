@@ -22,6 +22,9 @@ class StudyCoroutine : BaseActivity<ActivityCoroutineBinding>(R.layout.activity_
             lifecycleOwner = this@StudyCoroutine
         }
 
+        binding.btnStart.setOnClickListener {
+            studyCoroutineViewModel.start()
+        }
 
     }
 
