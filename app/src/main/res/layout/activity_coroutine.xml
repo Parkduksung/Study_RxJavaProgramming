@@ -4,6 +4,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.work.study_rxjavaprogramming.coroutine.StudyCoroutineViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,11 +17,23 @@
             android:id="@+id/et_text"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:text="@={viewModel.editText}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+        <TextView
+            android:id="@+id/tv_text"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.editText}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias=".7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
